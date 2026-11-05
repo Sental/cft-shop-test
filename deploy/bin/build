@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# bin/build [tag]
+#   dev:     rebuilds the dev image on the newest published build image, as
+#            <project>-app:dev-<UTC datetime> (DEV_IMAGE_TAG in .env), and removes older
+#            dev tags except the one it replaces. Takes no tag. bin/start then uses it.
+#   server:  builds the prod image locally under <tag>, the way CI does: same
+#            Dockerfile, named deploy context, Composer credentials from
+#            <magento root>/auth.json as a BuildKit secret (never copied into a layer).
+#            CI normally builds prod images; this exists for testing a build by hand.
+#            It needs a project that's been set up in dev, whose app/etc/config.php has
+#            its scopes, themes and i18n (bin/magento app:config:dump scopes themes i18n):
+#            a build has no database, so static content deploy reads them from there.
+# shellcheck source=_lib.sh
+. "$(dirname "$0")/_lib.sh"
+
+if is_dev && [ $# -eq 0 ]; then
+    dev_image_build
+    exit 0
+fi
+
+tag=${1:-}
+[ -n "$tag" ] || die "usage: bin/build <image:tag> (builds the prod target)"
+root=$(magento_root)
+
+# Checked first, so a project that isn't ready fails now, not minutes in at static content
+# deploy. CI runs the same check.
+bash "$DEPLOY_DIR/lib/prod-build-check.sh" "$root" "$(env_get PHP_VERSION 8.5)" || exit 1
+
+args=(
+    --build-context "deploy=$DEPLOY_DIR"
+    -f "$DEPLOY_DIR/Dockerfile"
+    --target prod
+    --build-arg "PHP_VERSION=$(env_get PHP_VERSION 8.5)"
+    --build-arg "THEME_PATHS=$(env_get THEME_PATHS)"
+    --build-arg "LOCALES=$(env_get LOCALES en_US)"
+    --build-arg "SCD_JOBS=$(env_get SCD_JOBS 1)"
+    --build-arg "HOOK_ENV=$(env_get HOOK_ENV)"
+    -t "$tag"
+)
+if [ -f "$root/auth.json" ]; then
+    args+=(--secret "id=composer_auth,src=$root/auth.json")
+else
+    warn "no $root/auth.json: building without Composer credentials"
+fi
+docker buildx build "${args[@]}" "$root"

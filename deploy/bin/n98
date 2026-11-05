@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# bin/n98 <command> [args]: n98-magerun2 in the app container, as www-data.
+# It runs the project's vendor/bin/n98-magerun2, which Mage-OS requires
+# (n98/magerun2-dist).
+# shellcheck source=_lib.sh
+. "$(dirname "$0")/_lib.sh"
+
+php_exec php vendor/bin/n98-magerun2 "$@"
