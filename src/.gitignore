@@ -1,0 +1,11 @@
+# Written by deploy/setup for a new project: what Composer, Magento and the stack
+# recreate, and the files that hold secrets. Extend it as the project needs.
+/vendor/
+/generated/
+/var/
+/pub/static/
+/pub/media/
+/node_modules/
+/auth.json
+/app/etc/env.php
+/app/etc/env.php.backup.*
