@@ -24,7 +24,7 @@
         "mage-os/composer-root-update-plugin": "4.0.0",
         "mage-os/module-worker-mode": "^1.0",
         "mage-os/product-community-edition": "4.0.0",
-        "opengento/magento2-frankenphp-base": "^0.9.4",
+        "opengento/magento2-frankenphp-base": "^0.10.0",
         "opengento/module-application": "0.11.2"
     },
     "require-dev": {
