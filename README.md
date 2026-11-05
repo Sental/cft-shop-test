@@ -1,7 +1,7 @@
 # frankentemplate
 
 A Docker stack that runs Mage-OS (or Magento Open Source) on FrankenPHP in worker mode, from a dev
-machine to blue/green production servers. One command sets it up: `deploy/setup`.1
+machine to blue/green production servers. One command sets it up: `deploy/setup`.
 
 > **Status: pre-release.** The dev path, `--hyva` and `--sample-data` are tested on WSL2 with a new
 > Mage-OS 3.6 project. Mage-OS 4.0, now the default, and server mode are still being tested, and CI and
