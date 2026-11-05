@@ -25,7 +25,7 @@
         "mage-os/module-worker-mode": "^1.0",
         "mage-os/product-community-edition": "4.0.0",
         "opengento/magento2-frankenphp-base": "^0.9.4",
-        "opengento/module-application": "0.11.2"
+        "opengento/module-application": "0.14.0"
     },
     "require-dev": {
         "allure-framework/allure-phpunit": "^3.2",
